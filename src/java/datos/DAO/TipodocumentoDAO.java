@@ -63,7 +63,8 @@ public class TipodocumentoDAO implements DAOInterface <Tipodocumento>{
     }
 
     @Override
-    public void delete(Tipodocumento entity) {
+    public boolean delete(Tipodocumento entity) {
+        boolean exito;
         try {
             Connection c = Conexion.getConexion();
             PreparedStatement statement=
@@ -73,13 +74,16 @@ public class TipodocumentoDAO implements DAOInterface <Tipodocumento>{
            
             
             statement.execute();
+            exito = true;
             c.close();
             
         } catch (SQLException ex) {
             Logger.getLogger(FuncionarioDAO.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex);
+            return false;
         }
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return exito;
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -107,6 +111,7 @@ public class TipodocumentoDAO implements DAOInterface <Tipodocumento>{
         } catch (SQLException ex) {
             Logger.getLogger(FuncionarioDAO.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex);
+            return null;
         }
         
         

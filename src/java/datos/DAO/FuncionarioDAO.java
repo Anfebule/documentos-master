@@ -42,16 +42,16 @@ public class FuncionarioDAO implements DAOInterface<Funcionario>{
             else
             {
                  statement=
-                    c.prepareStatement("update  funcionario set numero_documento=?, nombres=?,apellido1=?,apellido2=?,clave=? where numero_documento=?");
-                  statement.setString(1, entity.getNumeroDocumento());
-            statement.setString(2, entity.getNombres());
-            statement.setString(3, entity.getApellido1());
-            statement.setString(4, entity.getApellido2());
-            statement.setString(5, entity.getClave());
-            statement.setString(6, entity.getNumeroDocumento());
+                    c.prepareStatement("update funcionario set numero_documento=?, nombres=?, apellido1=?, apellido2=?, clave=? where numero_documento=?");
+                statement.setString(1, entity.getNumeroDocumento());
+                statement.setString(2, entity.getNombres());
+                statement.setString(3, entity.getApellido1());
+                statement.setString(4, entity.getApellido2());
+                statement.setString(5, entity.getClave());
+                statement.setString(6, entity.getNumeroDocumento());
             }    
             
-            exito = statement.execute();
+            statement.execute();
             
             exito=true;
             c.close();
@@ -67,8 +67,8 @@ public class FuncionarioDAO implements DAOInterface<Funcionario>{
     }
 
     @Override
-    public void delete(Funcionario entity) {
-            
+    public boolean delete(Funcionario entity) {
+        boolean exito;
         try {
             Connection c = Conexion.getConexion();
             PreparedStatement statement=
@@ -78,30 +78,30 @@ public class FuncionarioDAO implements DAOInterface<Funcionario>{
            
             
             statement.execute();
+            exito = true;
             c.close();
             
         } catch (SQLException ex) {
             Logger.getLogger(FuncionarioDAO.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex);
+            return false;
         }
-        
-        
-        
-        
+        return exito;
     }
 
    
+    @Override
     public Funcionario findById(Object id) {
             Funcionario entity=null;
         try {
             Connection c = Conexion.getConexion();
             PreparedStatement statement=
                     c.prepareStatement(
-                    "select numero_documento, nombres,apellido1,apellido2, clave from funcionario where numero_documento=?"
+                    "select * from funcionario where numero_documento=?"
                     );
             statement.setString(1, (String)id);
             
-            ResultSet results =   statement.executeQuery();
+            ResultSet results = statement.executeQuery();
             if(results.next())
             {
                 entity = new Funcionario();
@@ -117,6 +117,7 @@ public class FuncionarioDAO implements DAOInterface<Funcionario>{
         } catch (SQLException ex) {
             Logger.getLogger(FuncionarioDAO.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex);
+            return null;
         }
         
         
@@ -125,13 +126,13 @@ public class FuncionarioDAO implements DAOInterface<Funcionario>{
 
     @Override
     public ArrayList<Funcionario> findAll() {
-        ArrayList<Funcionario> entities = new ArrayList<Funcionario>();
+        ArrayList<Funcionario> entities = new ArrayList<>();
         
             try {
             Connection c = Conexion.getConexion();
             PreparedStatement statement=
                     c.prepareStatement(
-                    "select numero_documento, nombres,apellido1,apellido2, clave from funcionario"
+                    "select * from funcionario"
                     );
             
             

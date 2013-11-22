@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public interface DAOInterface<T> {
       
 public boolean save(T entity); 
-public void delete(T entity); 
+public boolean delete(T entity); 
 public T findById(Object id); 
 public ArrayList<T> findAll(); 
 

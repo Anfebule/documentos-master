@@ -1,11 +1,13 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package datos.DAO;
 
 import datos.configuracion.Conexion;
-import datos.entidades.Administrador;
+import datos.entidades.Denuncia;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,40 +18,36 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author 201
+ * @author AFBL
  */
-public class AdministradorDAO implements DAOInterface<Administrador>{
+public class DenunciaDAO implements DAOInterface<Denuncia> {
 
     @Override
-    public boolean save(Administrador entity) {
-        
+    public boolean save(Denuncia entity) {
         String sql="";
          boolean exito;
       
         try {
             Connection c = Conexion.getConexion();
             PreparedStatement statement;
-            if(this.findById(entity.getNumero_documento())==null) 
+            if(this.findById(entity.getId_denuncia())==null) 
             {    
-             statement = c.prepareStatement("insert into administrador values(?,?,?,?,?,?)");
+             statement = c.prepareStatement("insert into id_denuncia values(?,?,?,?)");
             
-                statement.setString(1, entity.getLogin());
-                statement.setString(2, entity.getClave());
-                statement.setString(3, entity.getNumero_documento());
-                statement.setString(4, entity.getNombres());
-                statement.setString(5, entity.getApellido1());
-                statement.setString(6, entity.getApellido2());
+                statement.setInt(1, entity.getId_denuncia());
+                statement.setDate(2, entity.getFecha_denuncia());
+                statement.setDate(3, entity.getFecha_perdida());
+                statement.setTime(4, entity.getHora_perdida());
             }
             else
             {
                  statement=
-                    c.prepareStatement("update  administrador set login=?. clave=?, numero_documento=?, nombres=?, apellido1=?, apellido2=? where numero_documento=?");
-                statement.setString(1, entity.getLogin());
-                statement.setString(2, entity.getClave());
-                statement.setString(3, entity.getNumero_documento());
-                statement.setString(4, entity.getNombres());
-                statement.setString(5, entity.getApellido1());
-                statement.setString(6, entity.getApellido2());
+                    c.prepareStatement("update  denuncia set id_denuncia=?, fecha_denuncia=?, fecha_perdida=?, hora_perdida=? where id_denuncia=?");
+                statement.setInt(1, entity.getId_denuncia());
+                statement.setDate(2, entity.getFecha_denuncia());
+                statement.setDate(3, entity.getFecha_perdida());
+                statement.setTime(4, entity.getHora_perdida());
+                statement.setInt(5, entity.getId_denuncia());
             }    
             
             exito = statement.execute();
@@ -69,14 +67,14 @@ public class AdministradorDAO implements DAOInterface<Administrador>{
     }
 
     @Override
-    public boolean delete(Administrador entity) {
+    public boolean delete(Denuncia entity) {
         boolean exito;
         try {
             Connection c = Conexion.getConexion();
             PreparedStatement statement=
-                    c.prepareStatement("delete from administrador where numero_documento=?");
+                    c.prepareStatement("delete from denuncia where id_denuncia=?");
             
-            statement.setString(1, entity.getNumero_documento());
+            statement.setInt(1, entity.getId_denuncia());
            
             
             statement.execute();
@@ -93,26 +91,24 @@ public class AdministradorDAO implements DAOInterface<Administrador>{
     }
 
     @Override
-    public Administrador findById(Object id) {
-        Administrador entity=null;
+    public Denuncia findById(Object id) {
+        Denuncia entity=null;
         try {
             Connection c = Conexion.getConexion();
             PreparedStatement statement=
                     c.prepareStatement(
-                    "select * from administrador where numero_documento=?"
+                    "select * from denuncia where id_denuncia=?"
                     );
-            statement.setString(1, (String)id);
+            statement.setInt(1, (Integer)id);
             
             ResultSet results =   statement.executeQuery();
             if(results.next())
             {
-                entity = new Administrador();
-                entity.setLogin(results.getString(1));
-                entity.setClave(results.getString(2));
-                entity.setNumero_documento(results.getString(3));
-                entity.setNombres(results.getString(4));
-                entity.setApellido1(results.getString(5));
-                entity.setApellido2(results.getString(6));
+                entity = new Denuncia();
+                entity.setId_denuncia(results.getInt(1));
+                entity.setFecha_denuncia(results.getDate(2));
+                entity.setFecha_perdida(results.getDate(3));
+                entity.setHora_perdida(results.getTime(4));
             }    
             
             c.close();
@@ -129,27 +125,25 @@ public class AdministradorDAO implements DAOInterface<Administrador>{
     }
 
     @Override
-    public ArrayList<Administrador> findAll() {
-        ArrayList<Administrador> entities = new ArrayList<>();
+    public ArrayList<Denuncia> findAll() {
+        ArrayList<Denuncia> entities = new ArrayList<>();
         
             try {
             Connection c = Conexion.getConexion();
             PreparedStatement statement=
                     c.prepareStatement(
-                    "select * from administrador"
+                    "select * from denuncia"
                     );
             
             
             ResultSet results =   statement.executeQuery();
             while(results.next())
             {
-                Administrador entity = new Administrador();
-                entity.setLogin(results.getString(1));
-                entity.setClave(results.getString(2));
-                entity.setNumero_documento(results.getString(3));
-                entity.setNombres(results.getString(4));
-                entity.setApellido1(results.getString(5));
-                entity.setApellido2(results.getString(6));
+                Denuncia entity = new Denuncia();
+                entity.setId_denuncia(results.getInt(1));
+                entity.setFecha_denuncia(results.getDate(2));
+                entity.setFecha_perdida(results.getDate(3));
+                entity.setHora_perdida(results.getTime(4));
                 entities.add(entity);
             }    
             
